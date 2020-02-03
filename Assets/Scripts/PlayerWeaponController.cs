@@ -6,14 +6,16 @@ public class PlayerWeaponController : MonoBehaviour
     public Transform weaponPoint;
     public MonoBehaviour[] gunsToCreate;
 
-    public int weaponCount;
-    public int currentWeapon;
+    private int weaponCount;
+    private int currentWeapon;
+    private float timeToDelay;
     private List<IGun> readyGuns;
 
     private void Start()
     {
         weaponCount = 0;
         currentWeapon = 0;
+        timeToDelay = Time.time;
         readyGuns = new List<IGun>();
         foreach (MonoBehaviour gunToCreate in gunsToCreate)
         {
@@ -29,11 +31,6 @@ public class PlayerWeaponController : MonoBehaviour
     private void Update()
     {
         if (weaponCount == 0) return;
-        //     if (Input.GetButtonDown("Fire1"))
-        //     {
-        //         Debug.Log("sss");
-        //     }
-        //     Debug.Log(Input.GetAxis("GunsWheel"));
 
         if (Input.GetButtonDown("GunsPos"))
         {
@@ -56,7 +53,11 @@ public class PlayerWeaponController : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1"))
         {
-           readyGuns[currentWeapon].Shoot();
+            if (Time.time - timeToDelay > readyGuns[currentWeapon].Delay)
+            {
+                readyGuns[currentWeapon].Shoot();
+                timeToDelay = Time.time;
+            }
         }
     }
 }

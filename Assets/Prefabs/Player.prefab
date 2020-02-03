@@ -110,10 +110,7 @@ MonoBehaviour:
   weaponPoint: {fileID: 6160081840100760139}
   gunsToCreate:
   - {fileID: 7543790776899949124, guid: 3fcd3f5ea3c38cb47a62210289c62a5e, type: 3}
-  - {fileID: 7543790776899949124, guid: 3fcd3f5ea3c38cb47a62210289c62a5e, type: 3}
-  - {fileID: 7543790776899949124, guid: 3fcd3f5ea3c38cb47a62210289c62a5e, type: 3}
-  weaponCount: 0
-  currentWeapon: 0
+  - {fileID: 31288919953155243, guid: 34d8c949b9d3fb3469b298475561d670, type: 3}
 --- !u!114 &470805440
 MonoBehaviour:
   m_ObjectHideFlags: 0

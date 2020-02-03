@@ -43,5 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45e00ea35f7882948b6e76dea921979c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delay: 0.5
   bulletPrefab: {fileID: 6653582997018425479, guid: 783f8e7171c1a2641887015ad8dc83b7,
     type: 3}

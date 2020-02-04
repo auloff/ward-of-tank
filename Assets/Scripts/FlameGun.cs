@@ -32,10 +32,10 @@ public class FlameGun : MonoBehaviour, IGun
         Collider[] enemies = Physics.OverlapBox(transform.position + offset, halfOfSize, Quaternion.identity);
     }
 
-    //private void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.DrawCube(transform.position + offset, halfOfSize);
-    //}
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawCube(transform.position + offset, halfOfSize);
+    }
 
     public void Shoot()
     {
@@ -49,6 +49,7 @@ public class FlameGun : MonoBehaviour, IGun
 
     public void TurnOff()
     {
+        flameParticle.Stop();
         this.gameObject.SetActive(false);
     }
 

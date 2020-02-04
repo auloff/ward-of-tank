@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DefaultGun : MonoBehaviour, IGun
+public class Cannon : MonoBehaviour, IGun
 {
     [SerializeField] private float delay;
     public float Delay 
@@ -11,7 +11,7 @@ public class DefaultGun : MonoBehaviour, IGun
     public GameObject bulletPrefab;
     public void Shoot()
     {
-        Instantiate(bulletPrefab, this.transform.position, this.transform.rotation, this.gameObject.transform);
+        Instantiate(bulletPrefab, this.transform.position, this.transform.rotation, this.gameObject.transform.parent);
     }
     public void TurnOn()
     {

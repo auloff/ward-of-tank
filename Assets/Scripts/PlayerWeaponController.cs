@@ -22,6 +22,7 @@ public class PlayerWeaponController : MonoBehaviour
             if (gunToCreate is IGun)
             {
                 MonoBehaviour gunObject = Instantiate(gunToCreate, weaponPoint.position, weaponPoint.rotation, this.gameObject.transform);
+                gunObject.gameObject.SetActive(false);
                 readyGuns.Add(gunObject.GetComponent<IGun>());
                 weaponCount++;
             }
@@ -34,21 +35,25 @@ public class PlayerWeaponController : MonoBehaviour
 
         if (Input.GetButtonDown("GunsPos"))
         {
+            readyGuns[currentWeapon].TurnOff();
             if (currentWeapon >= weaponCount - 1)
             {
                 currentWeapon = 0;
             }
             else
                 currentWeapon++;
+            readyGuns[currentWeapon].TurnOn();
         }
         else if (Input.GetButtonDown("GunsNeg"))
         {
+            readyGuns[currentWeapon].TurnOff();
             if (currentWeapon <= 0)
             {
                 currentWeapon = weaponCount - 1;
             }
             else
                 currentWeapon--;
+            readyGuns[currentWeapon].TurnOn();
         }
 
         if (Input.GetButtonDown("Fire1"))

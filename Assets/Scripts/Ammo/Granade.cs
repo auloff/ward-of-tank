@@ -42,7 +42,7 @@ public class Granade : MonoBehaviour
 
             targetRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius);
 
-            Health targetHealth = targetRigidbody.GetComponent<Health>();
+            BaseStats targetHealth = targetRigidbody.GetComponent<BaseStats>();
 
             if (!targetHealth)
                 continue;

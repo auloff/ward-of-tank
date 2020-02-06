@@ -3,65 +3,67 @@ using UnityEngine;
 
 public class PlayerWeaponController : MonoBehaviour
 {
-    public Transform weaponPoint;
-    public MonoBehaviour[] gunsToCreate;
+    [SerializeField]
+    private List<BaseGun> _gunsToCreate = null;
 
-    private int weaponCount;
-    private int currentWeapon;
-    private float timeToDelay;
-    private List<IGun> readyGuns;
+    [SerializeField]
+    private Transform _weaponPoint = null;
+
+    private int _currentWeapon;
+    private float _timeToDelay;
+    private List<BaseGun> _guns;
 
     private void Start()
     {
-        weaponCount = 0;
-        currentWeapon = 0;
-        timeToDelay = Time.time;
-        readyGuns = new List<IGun>();
-        foreach (MonoBehaviour gunToCreate in gunsToCreate)
+        _currentWeapon = 0;
+        _timeToDelay = Time.time;
+        _guns = new List<BaseGun>();
+        InitializeGuns();
+    }
+
+    private void InitializeGuns()
+    {
+        foreach (BaseGun gun in _gunsToCreate)
         {
-            if (gunToCreate is IGun)
-            {
-                MonoBehaviour gunObject = Instantiate(gunToCreate, weaponPoint.position, weaponPoint.rotation, this.gameObject.transform);
-                gunObject.gameObject.SetActive(false);
-                readyGuns.Add(gunObject.GetComponent<IGun>());
-                weaponCount++;
-            }
+            MonoBehaviour gunObject = Instantiate(gun, _weaponPoint.position, _weaponPoint.rotation, this.gameObject.transform);
+            _guns.Add(gunObject as BaseGun);
+            gunObject.gameObject.SetActive(false);
         }
+        if (_guns.Count != 0)
+            _guns[_currentWeapon].gameObject.SetActive(true);
     }
 
     private void Update()
     {
-        if (weaponCount == 0) return;
+        if (_gunsToCreate.Count == 0) return;
 
         if (Input.GetButtonDown("GunsPos"))
         {
-            readyGuns[currentWeapon].TurnOff();
-            if (currentWeapon >= weaponCount - 1)
+            _guns[_currentWeapon].TurnOff();
+            if (_currentWeapon >= _guns.Count - 1)
             {
-                currentWeapon = 0;
+                _currentWeapon = 0;
             }
-            else
-                currentWeapon++;
-            readyGuns[currentWeapon].TurnOn();
+            else _currentWeapon++;
+            _guns[_currentWeapon].TurnOn();
         }
         else if (Input.GetButtonDown("GunsNeg"))
         {
-            readyGuns[currentWeapon].TurnOff();
-            if (currentWeapon <= 0)
+            _guns[_currentWeapon].TurnOff();
+            if (_currentWeapon <= 0)
             {
-                currentWeapon = weaponCount - 1;
+                _currentWeapon = _guns.Count - 1;
             }
-            else
-                currentWeapon--;
-            readyGuns[currentWeapon].TurnOn();
+            else _currentWeapon--;
+            _guns[_currentWeapon].TurnOn();
         }
 
         if (Input.GetButtonDown("Fire1"))
         {
-            if (Time.time - timeToDelay > readyGuns[currentWeapon].Delay)
+            if (Time.time - _timeToDelay > _guns[_currentWeapon].delay)
             {
-                readyGuns[currentWeapon].Shoot();
-                timeToDelay = Time.time;
+                _guns[_currentWeapon].Shoot();
+                _timeToDelay = Time.time;
             }
         }
     }

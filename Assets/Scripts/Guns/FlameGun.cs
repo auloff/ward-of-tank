@@ -1,18 +1,25 @@
 ﻿using UnityEngine;
 
-public class FlameGun : MonoBehaviour, IGun
+public class FlameGun : BaseGun
 {
-    public Vector3 offset;
-    public Vector3 halfOfSize;
+    [SerializeField]
+    private Vector3 _offset;
+    public Vector3 offset
+    {
+        get => _offset;
+        set => _offset = value;
+    }
+    [SerializeField]
+    private Vector3 _halfOfSize;
+    public Vector3 halfOfSize
+    {
+        get => _halfOfSize;
+        set => _halfOfSize = value;
+    }
 
-    [SerializeField] private float delay;
+    [SerializeField]
     private bool isFlame;
     private ParticleSystem flameParticle;
-    public float Delay
-    {
-        get => delay;
-        private set => delay = value;
-    }
 
     private void Awake()
     {
@@ -25,10 +32,9 @@ public class FlameGun : MonoBehaviour, IGun
         flameParticle.Stop();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!isFlame) return;
-
         Collider[] enemies = Physics.OverlapBox(transform.position + offset, halfOfSize, Quaternion.identity);
     }
 
@@ -37,23 +43,23 @@ public class FlameGun : MonoBehaviour, IGun
         Gizmos.DrawCube(transform.position + offset, halfOfSize);
     }
 
-    public void Shoot()
+    public override void Shoot()
     {
+        isFlame = !isFlame;
         if (isFlame)
             flameParticle.Play();
         else
             flameParticle.Stop();
-
-        isFlame = !isFlame;
     }
 
-    public void TurnOff()
+    public override void TurnOff()
     {
         flameParticle.Stop();
+        isFlame = false;
         this.gameObject.SetActive(false);
     }
 
-    public void TurnOn()
+    public override void TurnOn()
     {
         this.gameObject.SetActive(true);
     }

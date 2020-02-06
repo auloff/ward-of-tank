@@ -1,36 +1,36 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    private ObjectPool instance;
-    private Dictionary<string, Queue<GameObject>> pools;
+    [Serializable]
+    public struct PoolInfo
+    {
+        public GameObject objectToPool;
+        public string tagName;
+        public int poolSize;
+    }
+    
+    public PoolInfo[] poolsInfo;
 
-    public ObjectPool Instance
+    private ObjectPool _instance;
+    public ObjectPool instance
     {
         get
         {
-            if (instance == null)
-                instance = this;
+            if (_instance == null)
+                _instance = this;
 
-            return instance;
+            return _instance;
         }
     }
 
-    [Serializable]
-    public class PoolInfo
-    {
-        public string tagName;
-        public GameObject objectToPool;
-        public int poolSize;
-    }
-
-    public PoolInfo[] poolsInfo;
+    private Dictionary<string, Queue<GameObject>> _pools;
 
     private void Awake()
     {
-        pools = new Dictionary<string, Queue<GameObject>>();
+        _pools = new Dictionary<string, Queue<GameObject>>();
         foreach (PoolInfo poolInfo in poolsInfo)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
@@ -42,7 +42,7 @@ public class ObjectPool : MonoBehaviour
                 objectPool.Enqueue(obj);
             }
 
-            pools.Add(poolInfo.tagName, objectPool);
+            _pools.Add(poolInfo.tagName, objectPool);
         }
     }
 }

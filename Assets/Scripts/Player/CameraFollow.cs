@@ -7,28 +7,28 @@ public class CameraFollow : MonoBehaviour
     private float _cameraSpeed;
     public float cameraSpeed
     {
+        get => _cameraSpeed;
         set
         {
-            if (value < 0.01f) _cameraSpeed = 0.01f;
+            if (value <= 0f) _cameraSpeed = 0.01f;
             else _cameraSpeed = value;
         }
-        get => _cameraSpeed;
     }
 
     [SerializeField]
     private Transform _target;
     public Transform target
     {
-        set => _target = value;
         get => _target;
+        set => _target = value;
     }
 
     [SerializeField]
     private Vector3 _offset;
     public Vector3 offset
     {
-        set => _offset = value;
         get => _offset;
+        set => _offset = value;
     }
 
     private void FixedUpdate()

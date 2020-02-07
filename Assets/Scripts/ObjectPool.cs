@@ -5,33 +5,30 @@ using System.Collections.Generic;
 public class ObjectPool : MonoBehaviour
 {
     [Serializable]
-    public struct PoolInfo
+    public class PoolInfo
     {
         public GameObject objectToPool;
-        public string tagName;
         public int poolSize;
     }
-    
-    public PoolInfo[] poolsInfo;
 
-    private ObjectPool _instance;
-    public ObjectPool instance
+    [SerializeField]
+    private PoolInfo[] _poolsInfo = null;
+    public PoolInfo[] poolsInfo
     {
-        get
-        {
-            if (_instance == null)
-                _instance = this;
-
-            return _instance;
-        }
+        get => _poolsInfo;
     }
+
+    public static ObjectPool instance { get; private set; }
 
     private Dictionary<string, Queue<GameObject>> _pools;
 
     private void Awake()
     {
+        if (instance == null) instance = this;
+        else Destroy(this);
+
         _pools = new Dictionary<string, Queue<GameObject>>();
-        foreach (PoolInfo poolInfo in poolsInfo)
+        foreach (PoolInfo poolInfo in _poolsInfo)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
 
@@ -42,7 +39,38 @@ public class ObjectPool : MonoBehaviour
                 objectPool.Enqueue(obj);
             }
 
-            _pools.Add(poolInfo.tagName, objectPool);
+            _pools.Add(poolInfo.objectToPool.name, objectPool);
         }
+    }
+
+    public GameObject GetFromPoolByName(string objName)
+    {
+        if (!_pools.ContainsKey(objName.Replace("(Clone)", string.Empty))) throw new ObjectPoolException();
+
+        GameObject temp = null;
+        if (_pools[objName].Count > 0)
+        {
+            temp = _pools[objName].Dequeue();
+        }
+        else
+        {
+            foreach (PoolInfo poolInfo in _poolsInfo)
+            {
+                if (poolInfo.objectToPool.name != objName) continue;
+
+                temp = Instantiate(poolInfo.objectToPool);
+                poolInfo.poolSize++;
+            }
+        }
+        return temp;
+    }
+
+    public void PutToPoolByName(GameObject obj)
+    {
+        string name = obj.name.Replace("(Clone)", string.Empty);
+        if (!_pools.ContainsKey(name)) throw new ObjectPoolException();
+
+        obj.SetActive(false);
+        _pools[name].Enqueue(obj);
     }
 }

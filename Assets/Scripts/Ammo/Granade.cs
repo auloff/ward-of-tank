@@ -5,12 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Granade : MonoBehaviour
 {
-    public float force;
-    public float explosionDelay;
-    public float explosionForce;
-    public int explosionDamage;
-    public float explosionRadius;
-    public AudioSource explosionAudio;
+    [Min(0.1f)]
+    [SerializeField]
+    private float force = 0.1f;
+    [Min(1)]
+    [SerializeField]
+    private int explosionDamage = 1;
+    [Min(0.1f)]
+    [SerializeField]
+    private float explosionDelay = 0.1f;
+    [Min(0.1f)]
+    [SerializeField]
+    private float explosionRadius = 0.1f;
 
     private ParticleSystem explosionParticle;
     private Rigidbody bulletRigidBody;
@@ -35,23 +41,13 @@ public class Granade : MonoBehaviour
 
         for (int i = 0; i < colliders.Length; i++)
         {
-            Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody>();
+            EnemyController targetController = colliders[i].GetComponent<EnemyController>();
 
-            if (!targetRigidbody)
+            if (targetController == null)
                 continue;
 
-            targetRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-
-            BaseStats targetHealth = targetRigidbody.GetComponent<BaseStats>();
-
-            if (!targetHealth)
-                continue;
-
-            targetHealth.TakeDamage(explosionDamage);
+            targetController.EnemyTakeDamage(explosionDamage);
         }
-
-        if (explosionAudio != null)
-            explosionAudio.Play();
 
         if (explosionParticle != null)
         {
@@ -63,5 +59,10 @@ public class Granade : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position, explosionRadius);
     }
 }

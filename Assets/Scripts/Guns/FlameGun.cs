@@ -1,61 +1,68 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class FlameGun : BaseGun
 {
+    [Min(1)]
     [SerializeField]
-    private Vector3 _offset;
-    public Vector3 offset
-    {
-        get => _offset;
-        set => _offset = value;
+    private int _fireDamage = 1;
+    public int fireDamage 
+    { 
+        get => _fireDamage;
+        set
+        {
+            if (value <= 0) _fireDamage = 1;
+            else _fireDamage = value;
+        }
     }
-    [SerializeField]
-    private Vector3 _halfOfSize;
-    public Vector3 halfOfSize
-    {
-        get => _halfOfSize;
-        set => _halfOfSize = value;
-    }
-
-    [SerializeField]
-    private bool isFlame;
-    private ParticleSystem flameParticle;
+    
+    private bool _isFlame;
+    private ParticleSystem _flameParticle;
+    private Collider _flameCollider;
 
     private void Awake()
     {
-        flameParticle = GetComponent<ParticleSystem>();    
+        _flameCollider = GetComponent<Collider>();
+        _flameParticle = GetComponent<ParticleSystem>();    
     }
 
     private void Start()
     {
-        isFlame = false;
-        flameParticle.Stop();
+        _isFlame = false;
+        _flameParticle.Stop();
+        _flameCollider.enabled = false;
     }
-
-    private void FixedUpdate()
+    
+    private void OnTriggerEnter(Collider other)
     {
-        if (!isFlame) return;
-        Collider[] enemies = Physics.OverlapBox(transform.position + offset, halfOfSize, Quaternion.identity);
-    }
+        EnemyController targetController = other.gameObject.GetComponent<EnemyController>();
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawCube(transform.position + offset, halfOfSize);
+        if (targetController == null)
+            return;
+
+        targetController.EnemyTakeDamage(_fireDamage);
     }
 
     public override void Shoot()
     {
-        isFlame = !isFlame;
-        if (isFlame)
-            flameParticle.Play();
+        _isFlame = !_isFlame;
+        if (_isFlame)
+        {
+            _flameParticle.Play();
+            _flameCollider.enabled = true;
+        }
         else
-            flameParticle.Stop();
+        {
+            _flameParticle.Stop();
+            _flameCollider.enabled = false;
+
+        }
     }
 
     public override void TurnOff()
     {
-        flameParticle.Stop();
-        isFlame = false;
+        _flameParticle.Stop();
+        _isFlame = false;
         this.gameObject.SetActive(false);
     }
 

@@ -9,12 +9,12 @@ public class PlayerMovement : MonoBehaviour
     private float _movementSpeed;
     public float movementSpeed
     {
+        get => _movementSpeed;
         set
         {
-            if (value < 0.01f) _movementSpeed = 0.01f;
+            if (value <= 0f) _movementSpeed = 0.01f;
             else _movementSpeed = value;
         }
-        get => _movementSpeed;
     }
     
     [Min(0.01f)]
@@ -22,12 +22,12 @@ public class PlayerMovement : MonoBehaviour
     private float _turnSpeed;
     public float turnSpeed
     {
+        get => _turnSpeed;
         set
         {
-            if (value < 0.01f) _turnSpeed = 0.01f;
+            if (value <= 0f) _turnSpeed = 0.01f;
             else _turnSpeed = value;
         }
-        get => _turnSpeed;
     }
 
     private Rigidbody _playerRigidbody;

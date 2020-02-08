@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyMove))]
 [RequireComponent(typeof(EnemyStats))]
 [RequireComponent(typeof(Collider))]
-[RequireComponent(typeof(Rigidbody))]
 public class EnemyController : MonoBehaviour
 {
     [Min(0.1f)]

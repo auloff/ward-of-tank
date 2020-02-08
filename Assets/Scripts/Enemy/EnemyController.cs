@@ -65,7 +65,9 @@ public class EnemyController : MonoBehaviour
     {
         _currentDestination = homePoint;
         yield return new WaitForSeconds(_runAwayDelay);
-        _currentDestination = _playerTarget;
+        
+        if (gameObject.activeSelf)
+            _currentDestination = _playerTarget;
     }
 
     public void EnemyTakeDamage(int damage)

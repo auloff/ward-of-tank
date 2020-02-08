@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 7
-  explosionDamage: 70
+  explosionDamage: 200
   explosionDelay: 3
   explosionRadius: 2
 --- !u!1001 &7104258727801749159
